@@ -8,7 +8,7 @@ export default function AboutPage() {
         
         <div className="mb-12 relative h-[400px] rounded-lg overflow-hidden">
           <Image
-            src="../../../public/images/about.jpeg"
+            src="/images/about.jpeg"
             alt="سكاربا للأحذية"
             fill
             className="object-cover"
