@@ -68,9 +68,18 @@ export function Footer({ className = '' }: FooterProps) {
           <div>
             <h3 className="text-xl font-bold mb-4 font-arabic">معلومات الاتصال</h3>
             <ul className="space-y-2 text-secondary-300">
-              <li className="font-arabic">العنوان: شارع الرئيسي، المدينة</li>
-              <li className="font-arabic">الهاتف: +123 456 789</li>
-              <li className="font-arabic">البريد الإلكتروني: info@scarpashoes.com</li>
+              <li className="flex items-center gap-2 font-arabic">
+                <FiMapPin className="text-primary-400" />
+                <span>العنوان: شارع الرئيسي، المدينة</span>
+              </li>
+              <li className="flex items-center gap-2 font-arabic">
+                <FiPhone className="text-primary-400" />
+                <span>الهاتف: +123 456 789</span>
+              </li>
+              <li className="flex items-center gap-2 font-arabic">
+                <FiMail className="text-primary-400" />
+                <span>البريد الإلكتروني: info@scarpashoes.com</span>
+              </li>
               <li className="font-arabic">ساعات العمل: 9 ص - 10 م</li>
             </ul>
           </div>

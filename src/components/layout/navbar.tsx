@@ -11,12 +11,6 @@ export function Navbar() {
   const { theme, setTheme } = useTheme()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const isHome = pathname === '/'
-  const isProducts = pathname === '/products'
-  const isCart = pathname === '/cart'
-  const isCheckout = pathname === '/checkout'
-  const isOrders = pathname === '/orders'
-  const isAdmin = pathname.startsWith('/admin')
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-secondary-200">

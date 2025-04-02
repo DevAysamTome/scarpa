@@ -29,7 +29,7 @@ export default function ProductsPage() {
   const [hasMore, setHasMore] = useState(true)
   const productsPerPage = 12
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'categories'))
       const categoriesData = querySnapshot.docs
@@ -40,7 +40,7 @@ export default function ProductsPage() {
       console.error('Error fetching categories:', error)
       toast.error('حدث خطأ أثناء تحميل الأقسام')
     }
-  }
+  }, [])
 
   const fetchProducts = useCallback(async (isLoadMore = false) => {
     try {
@@ -102,7 +102,7 @@ export default function ProductsPage() {
   useEffect(() => {
     fetchCategories()
     fetchProducts()
-  }, [fetchProducts])
+  }, [fetchCategories, fetchProducts])
 
   const handleFilterChange = (filter: string, value: string) => {
     switch (filter) {
