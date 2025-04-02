@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { AuthProvider } from "@/contexts/auth-context";
 import { Toaster } from "react-hot-toast";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -30,18 +31,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <FirebaseProvider>
-            <CartProvider>
-              <div className="flex flex-col min-h-screen">
-                <Navbar />
-                <main className="flex-grow pt-16">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-              <Toaster position="top-center" />
-            </CartProvider>
-          </FirebaseProvider>
+          <AuthProvider>
+            <FirebaseProvider>
+              <CartProvider>
+                <div className="flex flex-col min-h-screen">
+                  <Navbar />
+                  <main className="flex-grow pt-16">
+                    {children}
+                  </main>
+                  <Footer />
+                </div>
+                <Toaster position="top-center" />
+              </CartProvider>
+            </FirebaseProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

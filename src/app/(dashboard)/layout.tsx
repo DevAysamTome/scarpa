@@ -1,27 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import {
-  FiHome,
-  FiShoppingBag,
-  FiGrid,
-  FiUsers,
-  FiShoppingCart,
-  FiSettings,
-  FiMenu,
-  FiX,
-} from 'react-icons/fi'
-
-const navigation = [
-  { name: 'لوحة التحكم', href: '/dashboard', icon: FiHome },
-  { name: 'المنتجات', href: '/dashboard/products', icon: FiShoppingBag },
-  { name: 'الأقسام', href: '/dashboard/categories', icon: FiGrid },
-  { name: 'الطلبات', href: '/dashboard/orders', icon: FiShoppingCart },
-  { name: 'العملاء', href: '/dashboard/customers', icon: FiUsers },
-  { name: 'الإعدادات', href: '/dashboard/settings', icon: FiSettings },
-]
+import { FiHome, FiShoppingBag, FiUsers, FiSettings, FiLogOut } from 'react-icons/fi'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function DashboardLayout({
   children,
@@ -30,58 +13,75 @@ export default function DashboardLayout({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const pathname = usePathname()
+  const { signOut } = useAuth()
+
+  const menuItems = [
+    { href: '/dashboard', label: 'لوحة التحكم', icon: FiHome },
+    { href: '/dashboard/orders', label: 'الطلبات', icon: FiShoppingBag },
+    { href: '/dashboard/customers', label: 'العملاء', icon: FiUsers },
+    { href: '/dashboard/settings', label: 'الإعدادات', icon: FiSettings },
+  ]
 
   return (
-    <div className="!flex !min-h-screen !pt-0 !flex-row bg-secondary-50">
+    <div className="min-h-screen bg-secondary-50">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 right-0 h-full bg-white border-l border-secondary-200 transition-all duration-300 z-40 ${
+        className={`fixed top-0 right-0 h-full bg-white border-l border-secondary-200 transition-all duration-300 ${
           isSidebarOpen ? 'w-64' : 'w-20'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h1 className={`font-bold text-xl text-primary-600 ${!isSidebarOpen && 'hidden'}`}>
-            سكاربا
-          </h1>
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 rounded-lg hover:bg-secondary-100"
-          >
-            {isSidebarOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-          </button>
-        </div>
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className={`font-bold text-xl ${!isSidebarOpen && 'hidden'}`}>
+              لوحة التحكم
+            </h1>
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-2 hover:bg-secondary-100 rounded-lg"
+            >
+              {isSidebarOpen ? '←' : '→'}
+            </button>
+          </div>
 
-        <nav className="p-4">
-          <ul className="space-y-2">
-            {navigation.map((item) => {
+          <nav className="space-y-2">
+            {menuItems.map((item) => {
+              const Icon = item.icon
               const isActive = pathname === item.href
+
               return (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                      isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-secondary-600 hover:bg-secondary-100'
-                    }`}
-                  >
-                    <item.icon size={20} />
-                    {isSidebarOpen && <span className="font-arabic">{item.name}</span>}
-                  </Link>
-                </li>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-primary-50 text-primary-600'
+                      : 'text-secondary-600 hover:bg-secondary-50'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  {isSidebarOpen && <span>{item.label}</span>}
+                </Link>
               )
             })}
-          </ul>
-        </nav>
+          </nav>
+
+          <button
+            onClick={signOut}
+            className="flex items-center gap-3 p-3 text-red-600 hover:bg-red-50 rounded-lg mt-8 w-full"
+          >
+            <FiLogOut className="w-5 h-5" />
+            {isSidebarOpen && <span>تسجيل الخروج</span>}
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
       <main
-        className={`flex-1 overflow-auto transition-all duration-300 ${
+        className={`transition-all duration-300 ${
           isSidebarOpen ? 'mr-64' : 'mr-20'
         }`}
       >
-        {children}
+        <div className="p-8">{children}</div>
       </main>
     </div>
   )
