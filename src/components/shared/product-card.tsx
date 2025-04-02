@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { FiShoppingCart } from 'react-icons/fi'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -52,10 +51,7 @@ export function ProductCard({ id, name, price, image, category, stock }: Product
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5 }}
+    <div
       className="card group overflow-hidden"
     >
       <Link href={`/products/${id}`}>
@@ -89,6 +85,6 @@ export function ProductCard({ id, name, price, image, category, stock }: Product
           </button>
         </div>
       </Link>
-    </motion.div>
+    </div>
   )
 } 

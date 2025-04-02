@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FiFacebook, FiInstagram, FiTwitter } from 'react-icons/fi'
+import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 
 interface FooterProps {
   className?: string

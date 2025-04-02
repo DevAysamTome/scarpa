@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore'
+import { useState, useEffect, useCallback } from 'react'
+import { collection, getDocs, query, where, orderBy, limit, startAfter, DocumentSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { ProductCard } from '@/components/shared/product-card'
 import toast from 'react-hot-toast'
@@ -25,14 +25,9 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
   const [sortBy, setSortBy] = useState('newest')
-  const [lastVisible, setLastVisible] = useState<any>(null)
+  const [lastVisible, setLastVisible] = useState<DocumentSnapshot | null>(null)
   const [hasMore, setHasMore] = useState(true)
   const productsPerPage = 12
-
-  useEffect(() => {
-    fetchCategories()
-    fetchProducts()
-  }, [])
 
   const fetchCategories = async () => {
     try {
@@ -47,7 +42,7 @@ export default function ProductsPage() {
     }
   }
 
-  const fetchProducts = async (isLoadMore = false) => {
+  const fetchProducts = useCallback(async (isLoadMore = false) => {
     try {
       setLoading(true)
       let productsQuery = query(
@@ -102,7 +97,12 @@ export default function ProductsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedCategory, sortBy, lastVisible])
+
+  useEffect(() => {
+    fetchCategories()
+    fetchProducts()
+  }, [fetchProducts])
 
   const handleFilterChange = (filter: string, value: string) => {
     switch (filter) {
