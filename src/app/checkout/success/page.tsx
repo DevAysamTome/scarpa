@@ -1,10 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { FiCheckCircle, FiShoppingBag } from 'react-icons/fi';
+
+interface OrderItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  size: number;
+  color: string;
+  image: string;
+}
 
 interface Order {
   id: string;
@@ -16,7 +26,7 @@ interface Order {
     phone1: string;
     phone2?: string;
   };
-  items: any[];
+  items: OrderItem[];
   total: number;
   status: string;
   createdAt: Date;
@@ -29,17 +39,14 @@ export default function CheckoutSuccessPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (orderId) {
-      fetchOrder();
-    } else {
+  const fetchOrder = useCallback(async () => {
+    if (!orderId) {
       router.push('/');
+      return;
     }
-  }, [orderId]);
 
-  const fetchOrder = async () => {
     try {
-      const orderDoc = await getDoc(doc(db, 'orders', orderId!));
+      const orderDoc = await getDoc(doc(db, 'orders', orderId));
       if (orderDoc.exists()) {
         setOrder({
           id: orderDoc.id,
@@ -55,7 +62,11 @@ export default function CheckoutSuccessPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId, router]);
+
+  useEffect(() => {
+    fetchOrder();
+  }, [fetchOrder]);
 
   if (loading) {
     return (
@@ -92,7 +103,7 @@ export default function CheckoutSuccessPage() {
                 </span>
               </div>
               <div className="space-y-4">
-                {order.items.map((item: any) => (
+                {order.items.map((item: OrderItem) => (
                   <div key={`${item.id}-${item.size}-${item.color}`} className="flex items-center gap-4">
                     <div className="relative w-16 h-16">
                       <img

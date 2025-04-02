@@ -27,7 +27,6 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState('newest')
   const [lastVisible, setLastVisible] = useState<any>(null)
   const [hasMore, setHasMore] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 12
 
   useEffect(() => {
@@ -117,13 +116,11 @@ export default function ProductsPage() {
         setSortBy(value)
         break
     }
-    setCurrentPage(1)
     setLastVisible(null)
     fetchProducts()
   }
 
   const handleLoadMore = () => {
-    setCurrentPage(prev => prev + 1)
     fetchProducts(true)
   }
 

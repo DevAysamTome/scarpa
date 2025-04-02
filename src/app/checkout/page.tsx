@@ -3,11 +3,10 @@
 import { useState } from 'react';
 import { useCart } from '@/contexts/cart-context';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
-import { FiShoppingBag } from 'react-icons/fi';
 
 interface CheckoutForm {
   name: string;
