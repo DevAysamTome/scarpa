@@ -1,103 +1,233 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { collection, getDocs, query, limit, where, orderBy } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { FiArrowLeft, FiShoppingBag, FiStar } from 'react-icons/fi'
+import Carousel from '@/components/Carousel'
+import { CarouselSlide } from '@/types/carousel'
+
+interface Product {
+  id: string
+  name: string
+  price: number
+  image: string
+  category: string
+}
+
+interface Category {
+  id: string
+  name: string
+  image: string
+}
+
+export default function HomePage() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [carouselSlides, setCarouselSlides] = useState<CarouselSlide[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch carousel slides
+        const slidesQuery = query(
+          collection(db, 'carousel'),
+          where('isActive', '==', true),
+          orderBy('order', 'asc')
+        )
+        const slidesSnapshot = await getDocs(slidesQuery)
+        const slidesData = slidesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate(),
+          updatedAt: doc.data().updatedAt?.toDate(),
+        })) as CarouselSlide[]
+        setCarouselSlides(slidesData)
+
+        // Fetch featured products
+        const productsQuery = query(
+          collection(db, 'products'),
+          limit(4)
+        )
+        const productsSnapshot = await getDocs(productsQuery)
+        const productsData = productsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Product[]
+        setFeaturedProducts(productsData)
+
+        // Fetch categories
+        const categoriesQuery = query(collection(db, 'categories'), limit(6))
+        const categoriesSnapshot = await getDocs(categoriesQuery)
+        const categoriesData = categoriesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Category[]
+        setCategories(categoriesData)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative h-[80vh]">
+        <Carousel slides={carouselSlides} />
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Featured Products Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold font-arabic">منتجات مميزة</h2>
+            <Link 
+              href="/products" 
+              className="text-primary-600 hover:text-primary-700 inline-flex items-center gap-2 font-arabic"
+            >
+              عرض الكل
+              <FiArrowLeft />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {loading ? (
+              Array(4).fill(0).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-secondary-100 h-64 rounded-lg mb-4" />
+                  <div className="h-4 bg-secondary-100 rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-secondary-100 rounded w-1/2" />
+                </div>
+              ))
+            ) : (
+              featuredProducts.map((product) => (
+                <Link 
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  className="group"
+                >
+                  <div className="relative h-64 mb-4 rounded-lg overflow-hidden">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <h3 className="font-semibold mb-2 font-arabic">{product.name}</h3>
+                  <p className="text-primary-600 font-bold font-arabic">{product.price} ₪</p>
+                </Link>
+              ))
+            )}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </section>
+
+      {/* Categories Section */}
+      <section className="py-16 bg-secondary-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold font-arabic">تسوق حسب الفئة</h2>
+            <Link 
+              href="/categories" 
+              className="text-primary-600 hover:text-primary-700 inline-flex items-center gap-2 font-arabic"
+            >
+              عرض الكل
+              <FiArrowLeft />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {loading ? (
+              Array(6).fill(0).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-white h-32 rounded-lg mb-4" />
+                  <div className="h-4 bg-white rounded w-3/4" />
+                </div>
+              ))
+            ) : (
+              categories.map((category) => (
+                <Link 
+                  key={category.id}
+                  href={`/categories/${category.id}`}
+                  className="group"
+                >
+                  <div className="relative h-32 mb-4 rounded-lg overflow-hidden">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <h3 className="text-center font-semibold font-arabic">{category.name}</h3>
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
+                <FiStar className="w-8 h-8 text-primary-600" />
+              </div>
+              <h3 className="font-bold mb-2 font-arabic">جودة عالية</h3>
+              <p className="text-secondary-600 font-arabic">
+                نقدم أفضل المنتجات من أشهر العلامات التجارية
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
+                <FiShoppingBag className="w-8 h-8 text-primary-600" />
+              </div>
+              <h3 className="font-bold mb-2 font-arabic">تسوق آمن</h3>
+              <p className="text-secondary-600 font-arabic">
+                دفع آمن وشحن سريع لجميع المنتجات
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
+                <FiStar className="w-8 h-8 text-primary-600" />
+              </div>
+              <h3 className="font-bold mb-2 font-arabic">خدمة عملاء</h3>
+              <p className="text-secondary-600 font-arabic">
+                فريق دعم متخصص لمساعدتك على مدار الساعة
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-16 bg-primary-900 text-black">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold mb-4 font-arabic">اشترك في نشرتنا البريدية</h2>
+          <p className="mb-8 font-arabic">احصل على آخر العروض والتخفيضات مباشرة إلى بريدك</p>
+          <form className="max-w-md mx-auto flex gap-4">
+            <input
+              type="email"
+              placeholder="البريد الإلكتروني"
+              className="flex-1 h-12 px-4 rounded-lg bg-primary-900/10  border-white/20 text-black placeholder-black/60"
+            />
+            <button type="submit" className="btn btn-primary h-12 w-40 font-arabic">
+              اشتراك
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+  )
 }
