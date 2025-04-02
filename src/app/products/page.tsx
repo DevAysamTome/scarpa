@@ -99,7 +99,7 @@ export default function ProductsPage() {
     } finally {
       setLoading(false)
     }
-  }, [selectedCategory, sortBy, lastVisible])
+  }, [selectedCategory, sortBy, lastVisible, productsPerPage])
 
   useEffect(() => {
     fetchCategories()

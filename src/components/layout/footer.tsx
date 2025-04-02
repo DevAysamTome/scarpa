@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Link from 'next/link'
 import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 

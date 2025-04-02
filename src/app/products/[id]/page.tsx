@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 'use client'
 
 import Image from 'next/image'
 import { useState, useEffect, use } from 'react'
-import { motion } from 'framer-motion'
 import { FiShoppingCart, FiHeart } from 'react-icons/fi'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
