@@ -11,7 +11,7 @@ export default function AboutPage() {
             src="/images/about.jpeg"
             alt="سكاربا للأحذية"
             fill
-            className="object-cover"
+            className="object-contain"
           />
         </div>
 
