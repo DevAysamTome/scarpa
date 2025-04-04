@@ -43,11 +43,11 @@ export function ShoppingCart() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 20 }}
-              className="fixed top-0 right-0 h-[100dvh] w-full max-w-md bg-white shadow-xl z-[101] overflow-hidden"
+              className="fixed top-0 right-0 h-[100dvh] w-full max-w-md dark:bg-dark-card bg-white shadow-xl z-[101] overflow-hidden"
             >
               <div className="flex flex-col h-full">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b bg-white">
+                <div className="flex items-center justify-between p-4 dark:border-dark-border dark:bg-dark-card">
                   <h2 className="text-xl font-bold font-arabic">سلة التسوق</h2>
                   <button
                     onClick={() => setIsOpen(false)}
@@ -75,7 +75,7 @@ export function ShoppingCart() {
                       {items.map((item) => (
                         <div 
                           key={`${item.id}-${item.size}-${item.color}`} 
-                          className="flex gap-4 p-4 bg-white rounded-lg border border-secondary-100"
+                          className="flex gap-4 p-4 dark:bg-dark-card rounded-lg border border-secondary-100 dark:border-dark-border"
                         >
                           <div className="relative w-24 h-24 flex-shrink-0">
                             <Image
@@ -125,7 +125,7 @@ export function ShoppingCart() {
 
                 {/* Footer */}
                 {items.length > 0 && (
-                  <div className="border-t p-4 bg-white">
+                  <div className="dark:border-dark-border p-4 dark:bg-dark-card">
                     <div className="flex justify-between mb-4">
                       <span className="font-arabic">المجموع الكلي</span>
                       <span className="font-bold text-primary-600 font-arabic">{total} ₪</span>

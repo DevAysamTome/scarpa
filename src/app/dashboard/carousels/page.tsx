@@ -8,108 +8,108 @@ import ProtectedRoute from '@/components/auth/protected-route';
 import toast from 'react-hot-toast';
 import { FiEdit2, FiTrash2, FiEye, FiPlus } from 'react-icons/fi';
 
-interface Category {
+interface Carousel {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  imageUrl: string;
-  slug: string;
-  active: boolean;
+  image: string;
+  link: string;
+  isActive: boolean;
   createdAt: string;
 }
 
-export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
+export default function CarouselsPage() {
+  const [carousels, setCarousels] = useState<Carousel[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [newCategory, setNewCategory] = useState<Omit<Category, 'id' | 'createdAt'>>({
-    name: '',
+  const [newCarousel, setNewCarousel] = useState<Omit<Carousel, 'id' | 'createdAt'>>({
+    title: '',
     description: '',
-    imageUrl: '',
-    slug: '',
-    active: true,
+    image: '',
+    link: '',
+    isActive: true,
   });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   useEffect(() => {
-    fetchCategories();
+    fetchCarousels();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchCarousels = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'categories'));
-      const categoriesData = querySnapshot.docs.map(doc => ({
+      const querySnapshot = await getDocs(collection(db, 'carousel'));
+      const carouselsData = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      })) as Category[];
-      setCategories(categoriesData);
+      })) as Carousel[];
+      setCarousels(carouselsData);
     } catch (error) {
-      console.error('Error fetching categories:', error);
-      toast.error('حدث خطأ أثناء جلب التصنيفات');
+      console.error('Error fetching carousels:', error);
+      toast.error('حدث خطأ أثناء جلب الكراسل');
     }
   };
 
-  const handleAddCategory = async (e: React.FormEvent) => {
+  const handleAddCarousel = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       let imageUrl = '';
       if (selectedImage) {
-        const storageRef = ref(storage, `categories/${Date.now()}-${selectedImage.name}`);
+        const storageRef = ref(storage, `carousel/${Date.now()}-${selectedImage.name}`);
         await uploadBytes(storageRef, selectedImage);
         imageUrl = await getDownloadURL(storageRef);
       }
 
-      const categoryData = {
-        ...newCategory,
-        imageUrl: imageUrl || newCategory.imageUrl,
+      const carouselData = {
+        ...newCarousel,
+        imageUrl: imageUrl || newCarousel.image,
         createdAt: new Date().toISOString(),
       };
 
-      await addDoc(collection(db, 'categories'), categoryData);
-      toast.success('تم إضافة التصنيف بنجاح');
+      await addDoc(collection(db, 'carousel'), carouselData);
+      toast.success('تم إضافة الكاروسيل بنجاح');
       setIsAddModalOpen(false);
-      setNewCategory({
-        name: '',
+      setNewCarousel({
+        title: '',
         description: '',
-        imageUrl: '',
-        slug: '',
-        active: true,
+        image: '',
+        link: '',
+        isActive: true,
       });
       setSelectedImage(null);
-      fetchCategories();
+      fetchCarousels();
     } catch (error) {
-      console.error('Error adding category:', error);
-      toast.error('حدث خطأ أثناء إضافة التصنيف');
+      console.error('Error adding carousel:', error);
+      toast.error('حدث خطأ أثناء إضافة الكاروسيل');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDeleteCategory = async (id: string) => {
-    if (window.confirm('هل أنت متأكد من حذف هذا التصنيف؟')) {
+  const handleDeleteCarousel = async (id: string) => {
+    if (window.confirm('هل أنت متأكد من حذف هذا الكاروسيل؟')) {
       try {
-        await deleteDoc(doc(db, 'categories', id));
-        toast.success('تم حذف التصنيف بنجاح');
-        fetchCategories();
+        await deleteDoc(doc(db, 'carousel', id));
+        toast.success('تم حذف الكاروسيل بنجاح');
+        fetchCarousels();
       } catch (error) {
-        console.error('Error deleting category:', error);
-        toast.error('حدث خطأ أثناء حذف التصنيف');
+        console.error('Error deleting carousel:', error);
+        toast.error('حدث خطأ أثناء حذف الكاروسيل');
       }
     }
   };
 
   const handleStatusChange = async (id: string, newStatus: boolean) => {
     try {
-      await updateDoc(doc(db, 'categories', id), {
-        active: newStatus,
+      await updateDoc(doc(db, 'carousel', id), {
+        isActive: newStatus,
       });
-      toast.success('تم تحديث حالة التصنيف');
-      fetchCategories();
+      toast.success('تم تحديث حالة الكاروسيل');
+      fetchCarousels();
     } catch (error) {
-      console.error('Error updating category status:', error);
-      toast.error('حدث خطأ أثناء تحديث حالة التصنيف');
+      console.error('Error updating carousel status:', error);
+      toast.error('حدث خطأ أثناء تحديث حالة الكاروسيل');
     }
   };
 
@@ -117,68 +117,68 @@ export default function CategoriesPage() {
     <ProtectedRoute>
       <div className="min-h-[calc(100vh-theme(space.16))] p-4 sm:p-6 pb-16">
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h1 className="text-2xl font-bold">التصنيفات</h1>
+          <h1 className="text-2xl font-bold">الكراسل</h1>
           <button
             onClick={() => setIsAddModalOpen(true)}
             className="btn btn-primary w-full sm:w-auto"
           >
-            إضافة تصنيف جديد
+            إضافة كاروسيل جديد
           </button>
         </div>
 
-        {categories.length === 0 ? (
+        {carousels.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-secondary-200 p-6 sm:p-12">
-            <p className="mb-4 text-lg text-secondary-600">لا توجد تصنيفات حالياً</p>
+            <p className="mb-4 text-lg text-secondary-600">لا توجد كراسل حالياً</p>
             <button
               onClick={() => setIsAddModalOpen(true)}
               className="btn btn-primary w-full sm:w-auto"
             >
-              إضافة تصنيف جديد
+              إضافة كاروسيل جديد
             </button>
           </div>
         ) : (
           <>
             {/* Mobile Card View */}
             <div className="block lg:hidden space-y-4">
-              {categories.map((category) => (
-                <div key={category.id} className="bg-white rounded-lg border border-secondary-200 p-4">
+              {carousels.map((carousel) => (
+                <div key={carousel.id} className="bg-white rounded-lg border border-secondary-200 p-4">
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium text-secondary-900">{category.name}</h3>
+                      <h3 className="text-lg font-medium text-secondary-900">{carousel.title}</h3>
                       <span className={`px-2 py-1 rounded-full text-xs ${
-                        category.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        carousel.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                       }`}>
-                        {category.active ? 'نشط' : 'غير نشط'}
+                        {carousel.isActive ? 'نشط' : 'غير نشط'}
                       </span>
                     </div>
                     
-                    {category.imageUrl && (
+                    {carousel.image && (
                       <div className="relative h-40 w-full overflow-hidden rounded-lg">
                         <img
-                          src={category.imageUrl}
-                          alt={category.name}
+                          src={carousel.image}
+                          alt={carousel.title}
                           className="h-full w-full object-cover"
                         />
                       </div>
                     )}
                     
-                    <p className="text-sm text-secondary-600 line-clamp-2">{category.description}</p>
+                    <p className="text-sm text-secondary-600 line-clamp-2">{carousel.description}</p>
                     
                     <div className="flex items-center justify-between pt-2 border-t border-secondary-100">
                       <button
-                        onClick={() => handleStatusChange(category.id, !category.active)}
+                        onClick={() => handleStatusChange(carousel.id, !carousel.isActive)}
                         className={`px-3 py-1 rounded-md text-sm ${
-                          category.active 
+                          carousel.isActive 
                             ? 'bg-red-100 text-red-800 hover:bg-red-200' 
                             : 'bg-green-100 text-green-800 hover:bg-green-200'
                         }`}
                       >
-                        {category.active ? 'تعطيل' : 'تفعيل'}
+                        {carousel.isActive ? 'تعطيل' : 'تفعيل'}
                       </button>
                       
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleDeleteCategory(category.id)}
+                          onClick={() => handleDeleteCarousel(carousel.id)}
                           className="p-2 text-red-600 hover:text-red-800"
                         >
                           <FiTrash2 className="w-5 h-5" />
@@ -197,7 +197,7 @@ export default function CategoriesPage() {
                   <thead className="bg-secondary-50">
                     <tr>
                       <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الصورة</th>
-                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الاسم</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">العنوان</th>
                       <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الوصف</th>
                       <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الرابط</th>
                       <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الحالة</th>
@@ -205,45 +205,45 @@ export default function CategoriesPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-secondary-200 bg-white">
-                    {categories.map((category) => (
-                      <tr key={category.id}>
+                    {carousels.map((carousel) => (
+                      <tr key={carousel.id}>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {category.imageUrl && (
+                          {carousel.image && (
                             <img
-                              src={category.imageUrl}
-                              alt={category.name}
+                              src={carousel.image}
+                              alt={carousel.title}
                               className="h-12 w-20 rounded-lg object-cover"
                             />
                           )}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{category.name}</td>
-                        <td className="px-6 py-4 text-sm text-secondary-900 max-w-xs truncate">{category.description}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{carousel.title}</td>
+                        <td className="px-6 py-4 text-sm text-secondary-900 max-w-xs truncate">{carousel.description}</td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900 max-w-xs truncate">
-                          <a href={`/categories/${category.slug}`} className="text-primary-600 hover:text-primary-800">
-                            {category.slug}
+                          <a href={carousel.link} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-800">
+                            {carousel.link}
                           </a>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           <span className={`inline-flex rounded-full px-2 py-1 text-xs ${
-                            category.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            carousel.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                           }`}>
-                            {category.active ? 'نشط' : 'غير نشط'}
+                            {carousel.isActive ? 'نشط' : 'غير نشط'}
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">
                           <div className="flex gap-2">
                             <button
-                              onClick={() => handleStatusChange(category.id, !category.active)}
+                              onClick={() => handleStatusChange(carousel.id, !carousel.isActive)}
                               className={`p-2 ${
-                                category.active 
+                                carousel.isActive 
                                   ? 'text-red-600 hover:text-red-800' 
                                   : 'text-green-600 hover:text-green-800'
                               }`}
                             >
-                              {category.active ? <FiEye className="w-5 h-5" /> : <FiPlus className="w-5 h-5" />}
+                              {carousel.isActive ? <FiEye className="w-5 h-5" /> : <FiPlus className="w-5 h-5" />}
                             </button>
                             <button
-                              onClick={() => handleDeleteCategory(category.id)}
+                              onClick={() => handleDeleteCarousel(carousel.id)}
                               className="p-2 text-red-600 hover:text-red-800"
                             >
                               <FiTrash2 className="w-5 h-5" />
@@ -259,20 +259,20 @@ export default function CategoriesPage() {
           </>
         )}
 
-        {/* Add Category Modal */}
+        {/* Add Carousel Modal */}
         {isAddModalOpen && (
           <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-screen items-center justify-center p-4">
               <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setIsAddModalOpen(false)} />
               <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-                <h2 className="text-xl font-bold mb-4">إضافة تصنيف جديد</h2>
-                <form onSubmit={handleAddCategory} className="space-y-4">
+                <h2 className="text-xl font-bold mb-4">إضافة كاروسيل جديد</h2>
+                <form onSubmit={handleAddCarousel} className="space-y-4">
                   <div className="mb-4">
-                    <label className="mb-2 block text-sm font-medium text-secondary-900">الاسم</label>
+                    <label className="mb-2 block text-sm font-medium text-secondary-900">العنوان</label>
                     <input
                       type="text"
-                      value={newCategory.name}
-                      onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                      value={newCarousel.title}
+                      onChange={(e) => setNewCarousel({ ...newCarousel, title: e.target.value })}
                       className="input w-full"
                       required
                     />
@@ -280,8 +280,8 @@ export default function CategoriesPage() {
                   <div className="mb-4">
                     <label className="mb-2 block text-sm font-medium text-secondary-900">الوصف</label>
                     <textarea
-                      value={newCategory.description}
-                      onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+                      value={newCarousel.description}
+                      onChange={(e) => setNewCarousel({ ...newCarousel, description: e.target.value })}
                       className="input w-full"
                       rows={3}
                       required
@@ -290,9 +290,9 @@ export default function CategoriesPage() {
                   <div className="mb-4">
                     <label className="mb-2 block text-sm font-medium text-secondary-900">الرابط</label>
                     <input
-                      type="text"
-                      value={newCategory.slug}
-                      onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
+                      type="url"
+                      value={newCarousel.link}
+                      onChange={(e) => setNewCarousel({ ...newCarousel, link: e.target.value })}
                       className="input w-full"
                       required
                     />
@@ -311,8 +311,8 @@ export default function CategoriesPage() {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={newCategory.active}
-                        onChange={(e) => setNewCategory({ ...newCategory, active: e.target.checked })}
+                        checked={newCarousel.isActive}
+                        onChange={(e) => setNewCarousel({ ...newCarousel, isActive: e.target.checked })}
                         className="ml-2"
                       />
                       <span className="text-sm font-medium text-secondary-900">نشط</span>

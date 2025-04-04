@@ -7,7 +7,7 @@ interface FooterProps {
 
 export function Footer({ className = '' }: FooterProps) {
   return (
-    <footer className={`bg-secondary-900 text-white py-12 ${className}`}>
+    <footer className={`dark:bg-dark-card  py-12 ${className}`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Quick Links */}
@@ -15,22 +15,22 @@ export function Footer({ className = '' }: FooterProps) {
             <h3 className="text-xl font-bold mb-4 font-arabic">روابط سريعة</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/products" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/products" className="dark:dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   المنتجات
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/categories" className="dark:dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   الأقسام
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/about" className="dark:dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   عن الشركة
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/contact" className="dark:dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   اتصل بنا
                 </Link>
               </li>
@@ -42,22 +42,22 @@ export function Footer({ className = '' }: FooterProps) {
             <h3 className="text-xl font-bold mb-4 font-arabic">خدمة العملاء</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/faq" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/faq" className="dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   الأسئلة الشائعة
                 </Link>
               </li>
               <li>
-                <Link href="/shipping" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/shipping-policy" className="dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   الشحن والتوصيل
                 </Link>
               </li>
               <li>
-                <Link href="/returns" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/return-policy" className="dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   سياسة الإرجاع
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-secondary-300 hover:text-primary-400 font-arabic">
+                <Link href="/privacy-policy" className="dark:text-secondary-300 hover:text-primary-400 font-arabic">
                   سياسة الخصوصية
                 </Link>
               </li>
@@ -67,7 +67,7 @@ export function Footer({ className = '' }: FooterProps) {
           {/* Contact Info */}
           <div>
             <h3 className="text-xl font-bold mb-4 font-arabic">معلومات الاتصال</h3>
-            <ul className="space-y-2 text-secondary-300">
+            <ul className="space-y-2 dark:text-secondary-300">
               <li className="flex items-center gap-2 font-arabic">
                 <FiMapPin className="text-primary-400" />
                 <span>العنوان: شارع الرئيسي، المدينة</span>
@@ -86,7 +86,7 @@ export function Footer({ className = '' }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-secondary-800 mt-8 pt-8 text-center text-secondary-300">
+        <div className="border-t border-secondary-800 mt-8 pt-8 text-center dark:text-secondary-300">
           <p className="font-arabic">
             © جميع الحقوق محفوظة لدى شركة تكنو كور {new Date().getFullYear()} 
           </p>

@@ -8,6 +8,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { FirebaseProvider } from '@/contexts/firebase-context'
 import { CartProvider } from '@/contexts/cart-context'
+import { FavoritesProvider } from '@/contexts/favorites-context'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,23 +26,20 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           <AuthProvider>
             <FirebaseProvider>
               <CartProvider>
-                <div className="flex flex-col min-h-screen">
-                  <Navbar />
-                  <main className="flex-grow pt-16">
-                    {children}
-                  </main>
-                  <Footer />
-                </div>
-                <Toaster position="top-center" />
+                <FavoritesProvider>
+                  <div className="flex flex-col min-h-screen">
+                    <Navbar />
+                    <main className="flex-grow pt-16">
+                      {children}
+                    </main>
+                    <Footer />
+                  </div>
+                  <Toaster position="top-center" />
+                </FavoritesProvider>
               </CartProvider>
             </FirebaseProvider>
           </AuthProvider>

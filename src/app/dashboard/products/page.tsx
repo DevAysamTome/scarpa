@@ -6,6 +6,7 @@ import { db, storage } from '@/lib/firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import ProtectedRoute from '@/components/auth/protected-route'
 import toast from 'react-hot-toast'
+import { FiEdit2, FiTrash2, FiEye } from 'react-icons/fi'
 
 interface Category {
   id: string
@@ -187,109 +188,170 @@ export default function ProductsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-[calc(100vh-theme(space.16))] p-6 pb-16">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="min-h-[calc(100vh-theme(space.16))] p-4 sm:p-6 pb-16">
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h1 className="text-2xl font-bold">المنتجات</h1>
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="btn btn-primary"
+            className="btn btn-primary w-full sm:w-auto"
           >
             إضافة منتج جديد
           </button>
         </div>
 
         {products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-secondary-200 p-12">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-secondary-200 p-6 sm:p-12">
             <p className="mb-4 text-lg text-secondary-600">لا توجد منتجات حالياً</p>
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="btn btn-primary"
+              className="btn btn-primary w-full sm:w-auto"
             >
               إضافة منتج جديد
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-secondary-200">
-            <table className="min-w-full divide-y divide-secondary-200">
-              <thead className="bg-secondary-50">
-                <tr>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الصورة</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الاسم</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الفئة</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">السعر</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">المقاسات</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الألوان</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">المخزون</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الحالة</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-secondary-200 bg-white">
-                {products.map((product) => (
-                  <tr key={product.id}>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      {product.image && (
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="h-12 w-12 rounded-lg object-cover"
-                        />
-                      )}
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.name}</td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.categoryName}</td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.price} ₪</td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">
-                      {product.sizes?.join(', ')}
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">
-                      <div className="flex gap-1">
-                        {product.colors?.map(color => (
-                          <div
-                            key={color}
-                            className="h-4 w-4 rounded-full border border-gray-300"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
+          <>
+            {/* Mobile Card View */}
+            <div className="block lg:hidden space-y-4">
+              {products.map((product) => (
+                <div key={product.id} className="bg-white rounded-lg border border-secondary-200 p-4">
+                  <div className="flex items-start gap-4">
+                    {product.image && (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="h-20 w-20 rounded-lg object-cover"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-medium text-secondary-900 truncate">{product.name}</h3>
+                      <p className="text-sm text-secondary-600">{product.categoryName}</p>
+                      <p className="text-lg font-medium text-primary-600 mt-1">{product.price} ₪</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <span className="text-sm text-secondary-600">المقاسات: {product.sizes?.join(', ')}</span>
+                        <div className="flex gap-1">
+                          {product.colors?.map(color => (
+                            <div
+                              key={color}
+                              className="h-4 w-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.stock}</td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                        product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
-                        {product.status === 'active' ? 'نشط' : 'غير نشط'}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleStatusChange(product.id, product.status === 'active' ? 'inactive' : 'active')}
-                          className="btn btn-secondary btn-sm"
-                        >
-                          {product.status === 'active' ? 'تعطيل' : 'تفعيل'}
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="btn btn-danger btn-sm"
-                        >
-                          حذف
-                        </button>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className={`text-sm px-2 py-1 rounded-full ${
+                          product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {product.status === 'active' ? 'نشط' : 'غير نشط'}
+                        </span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleStatusChange(product.id, product.status === 'active' ? 'inactive' : 'active')}
+                            className="p-2 text-secondary-600 hover:text-primary-600"
+                          >
+                            <FiEye className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProduct(product.id)}
+                            className="p-2 text-red-600 hover:text-red-800"
+                          >
+                            <FiTrash2 className="w-5 h-5" />
+                          </button>
+                        </div>
                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-hidden rounded-lg border border-secondary-200">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-secondary-200">
+                  <thead className="bg-secondary-50">
+                    <tr>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الصورة</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الاسم</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الفئة</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">السعر</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">المقاسات</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الألوان</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">المخزون</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الحالة</th>
+                      <th className="px-6 py-3 text-right text-sm font-medium text-secondary-900">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-secondary-200 bg-white">
+                    {products.map((product) => (
+                      <tr key={product.id}>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {product.image && (
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              className="h-12 w-12 rounded-lg object-cover"
+                            />
+                          )}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.name}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.categoryName}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.price} ₪</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">
+                          {product.sizes?.join(', ')}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">
+                          <div className="flex gap-1">
+                            {product.colors?.map(color => (
+                              <div
+                                key={color}
+                                className="h-4 w-4 rounded-full border border-gray-300"
+                                style={{ backgroundColor: color }}
+                              />
+                            ))}
+                          </div>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">{product.stock}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm">
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {product.status === 'active' ? 'نشط' : 'غير نشط'}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-900">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleStatusChange(product.id, product.status === 'active' ? 'inactive' : 'active')}
+                              className="text-secondary-600 hover:text-primary-600"
+                            >
+                              <FiEye className="w-5 h-5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProduct(product.id)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <FiTrash2 className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         )}
 
         {isAddModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50 p-4">
-            <div className="relative w-full max-w-2xl rounded-lg bg-white">
-              <div className="max-h-[90vh] overflow-y-auto p-6">
-                <h2 className="sticky top-0 mb-4 bg-white pb-4 text-xl font-bold">إضافة منتج جديد</h2>
-                <form onSubmit={handleAddProduct}>
+          <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-screen items-center justify-center p-4">
+              <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setIsAddModalOpen(false)} />
+              <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                <h2 className="text-xl font-bold mb-4">إضافة منتج جديد</h2>
+                <form onSubmit={handleAddProduct} className="space-y-4">
                   <div className="mb-4">
                     <label className="mb-2 block text-sm font-medium text-secondary-900">الصورة</label>
                     <input

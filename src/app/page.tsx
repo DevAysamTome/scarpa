@@ -78,14 +78,14 @@ export default function HomePage() {
   }, [])
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen dark:bg-dark-card">
       {/* Hero Section */}
       <section className="relative h-[80vh]">
         <Carousel slides={carouselSlides} />
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 dark:bg-dark-card">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold font-arabic">منتجات مميزة</h2>
@@ -177,7 +177,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 dark:bg-dark-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -212,7 +212,7 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-16 bg-primary-900 text-black">
+      <section className="py-16 dark:bg-dark-card">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl font-bold mb-4 font-arabic">اشترك في نشرتنا البريدية</h2>
           <p className="mb-8 font-arabic">احصل على آخر العروض والتخفيضات مباشرة إلى بريدك</p>
@@ -220,7 +220,7 @@ export default function HomePage() {
             <input
               type="email"
               placeholder="البريد الإلكتروني"
-              className="flex-1 h-12 px-4 rounded-lg bg-primary-900/10  border-white/20 text-black placeholder-black/60"
+              className="flex-1 h-12 px-4 rounded-lg dark:bg-dark-card   text-black placeholder-black/60"
             />
             <button type="submit" className="btn btn-primary h-12 w-40 font-arabic">
               اشتراك

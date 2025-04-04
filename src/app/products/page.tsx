@@ -7,18 +7,7 @@ import { collection, getDocs, query, where, orderBy, limit, startAfter, Document
 import { db } from '@/lib/firebase'
 import { ProductCard } from '@/components/shared/product-card'
 import toast from 'react-hot-toast'
-
-interface Product {
-  id: string
-  name: string
-  price: number
-  image: string
-  category: string
-  description: string
-  stock: number
-  createdAt: string
-  status: 'active' | 'inactive'
-}
+import { Product } from '@/types/product'
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -46,7 +35,10 @@ export default function ProductsPage() {
 
   const fetchProducts = useCallback(async (isLoadMore = false) => {
     try {
-      setLoading(true)
+      if (!isLoadMore) {
+        setLoading(true)
+      }
+      
       let productsQuery = query(
         collection(db, 'products'),
         where('status', '==', 'active'),
@@ -176,39 +168,39 @@ export default function ProductsPage() {
         </select>
       </div>
 
-      {/* Products Grid */}
-      {loading && products.length === 0 ? (
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+      {/* Loading State */}
+      {loading && !products.length && (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
         </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
-          </div>
+      )}
 
-          {/* Load More Button */}
-          {hasMore && !loading && (
-            <div className="flex justify-center mt-8">
-              <button
-                onClick={handleLoadMore}
-                className="btn btn-secondary px-6 py-2 font-arabic"
-                disabled={loading}
-              >
-                {loading ? 'جاري التحميل...' : 'تحميل المزيد'}
-              </button>
-            </div>
-          )}
+      {/* Products Grid */}
+      {products.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
 
-          {/* No Products Message */}
-          {!loading && products.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-xl text-secondary-600 font-arabic">لا توجد منتجات متاحة حالياً</p>
-            </div>
-          )}
-        </>
+      {/* Empty State */}
+      {!loading && products.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-xl text-secondary-600 font-arabic">لا توجد منتجات متاحة حالياً</p>
+        </div>
+      )}
+
+      {/* Load More Button */}
+      {hasMore && !loading && products.length > 0 && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={handleLoadMore}
+            className="btn btn-secondary px-6 py-2 font-arabic"
+          >
+            تحميل المزيد
+          </button>
+        </div>
       )}
     </div>
   )

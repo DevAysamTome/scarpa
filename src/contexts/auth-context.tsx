@@ -5,7 +5,10 @@ import { auth } from '@/lib/firebase'
 import { signOut as firebaseSignOut } from 'firebase/auth'
 
 interface AuthContextType {
-  signOut: () => Promise<void>
+  user: any | null;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)

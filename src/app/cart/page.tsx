@@ -11,7 +11,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center dark:bg-dark-card">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4 font-arabic">السلة فارغة</h1>
           <button 
@@ -26,14 +26,14 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen py-12 bg-secondary-50">
+    <div className="min-h-screen py-12 dark:bg-dark-card">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-8 text-center font-arabic">سلة المشتريات</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="dark:bg-dark-card rounded-lg shadow-lg p-6">
               <div className="space-y-4">
                 {items.map((item) => (
                   <div key={`${item.id}-${item.size}-${item.color}`} className="flex items-center gap-4 border-b pb-4 last:border-0">
@@ -83,7 +83,7 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-8">
+            <div className="dark:bg-dark-card rounded-lg shadow-lg p-6 sticky top-8">
               <h2 className="text-xl font-bold mb-4 font-arabic">ملخص الطلب</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">

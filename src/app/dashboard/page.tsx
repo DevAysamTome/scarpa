@@ -145,11 +145,11 @@ export default function DashboardPage() {
         <h1 className="mb-6 text-2xl font-bold">لوحة التحكم</h1>
 
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border border-secondary-200 bg-white p-6">
+          <div className="rounded-lg border dark:border-dark-border dark:bg-dark-card p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-secondary-600">إجمالي الطلبات</p>
-                <p className="mt-1 text-2xl font-semibold text-secondary-900">{stats.totalOrders}</p>
+                <p className="mt-1 text-2xl font-semibold dark:text-white">{stats.totalOrders}</p>
               </div>
               <div className="rounded-full bg-primary-100 p-3">
                 <svg className="h-6 w-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,11 +159,11 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-secondary-200 bg-white p-6">
+          <div className="rounded-lg border dark:border-dark-border dark:border-dark-border dark:bg-dark-card p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-secondary-600">إجمالي الإيرادات</p>
-                <p className="mt-1 text-2xl font-semibold text-secondary-900">{stats.totalRevenue} ₪</p>
+                <p className="mt-1 text-2xl font-semibold dark:text-white">{stats.totalRevenue} ₪</p>
               </div>
               <div className="rounded-full bg-green-100 p-3">
                 <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,11 +173,11 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-secondary-200 bg-white p-6">
+          <div className="rounded-lg border dark:border-dark-border dark:bg-dark-card p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-secondary-600">إجمالي العملاء</p>
-                <p className="mt-1 text-2xl font-semibold text-secondary-900">{stats.totalCustomers}</p>
+                <p className="mt-1 text-2xl font-semibold dark:text-white">{stats.totalCustomers}</p>
               </div>
               <div className="rounded-full bg-blue-100 p-3">
                 <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,11 +187,11 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-secondary-200 bg-white p-6">
+          <div className="rounded-lg border dark:border-dark-border dark:bg-dark-card p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-secondary-600">إجمالي المنتجات</p>
-                <p className="mt-1 text-2xl font-semibold text-secondary-900">{stats.totalProducts}</p>
+                <p className="mt-1 text-2xl font-semibold dark:text-white">{stats.totalProducts}</p>
               </div>
               <div className="rounded-full bg-purple-100 p-3">
                 <svg className="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,7 +203,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-lg border border-secondary-200 bg-white p-6">
+          <div className="rounded-lg border dark:border-dark-border dark:bg-dark-card p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-medium">آخر الطلبات</h2>
               <Link href="/dashboard/orders" className="text-sm text-primary-600 hover:text-primary-900">
@@ -212,7 +212,7 @@ export default function DashboardPage() {
             </div>
             <div className="overflow-x-auto">
               {stats.recentOrders.length === 0 ? (
-                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-secondary-200 p-12">
+                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed dark:border-dark-border p-12">
                   <p className="mb-4 text-lg text-secondary-600">لا توجد طلبات حالياً</p>
                   <Link href="/dashboard/orders" className="btn btn-primary">
                     إضافة طلب جديد
@@ -222,25 +222,25 @@ export default function DashboardPage() {
                 <table className="min-w-full divide-y divide-secondary-200">
                   <thead>
                     <tr>
-                      <th className="px-4 py-2 text-right text-sm font-medium text-secondary-900">رقم الطلب</th>
-                      <th className="px-4 py-2 text-right text-sm font-medium text-secondary-900">العميل</th>
-                      <th className="px-4 py-2 text-right text-sm font-medium text-secondary-900">المبلغ</th>
-                      <th className="px-4 py-2 text-right text-sm font-medium text-secondary-900">الحالة</th>
-                      <th className="px-4 py-2 text-right text-sm font-medium text-secondary-900">التاريخ</th>
+                      <th className="px-4 py-2 text-right text-sm font-medium dark:text-white">رقم الطلب</th>
+                      <th className="px-4 py-2 text-right text-sm font-medium dark:text-white">العميل</th>
+                      <th className="px-4 py-2 text-right text-sm font-medium dark:text-white">المبلغ</th>
+                      <th className="px-4 py-2 text-right text-sm font-medium dark:text-white">الحالة</th>
+                      <th className="px-4 py-2 text-right text-sm font-medium dark:text-white">التاريخ</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-secondary-200">
                     {stats.recentOrders.map((order) => (
                       <tr key={order.id}>
-                        <td className="whitespace-nowrap px-4 py-2 text-sm text-secondary-900">{order.orderNumber}</td>
-                        <td className="whitespace-nowrap px-4 py-2 text-sm text-secondary-900">{order.customerName}</td>
-                        <td className="whitespace-nowrap px-4 py-2 text-sm text-secondary-900">{order.amount} ₪</td>
+                        <td className="whitespace-nowrap px-4 py-2 text-sm dark:text-white">{order.orderNumber}</td>
+                        <td className="whitespace-nowrap px-4 py-2 text-sm dark:text-white">{order.customerName}</td>
+                        <td className="whitespace-nowrap px-4 py-2 text-sm dark:text-white">{order.amount} ₪</td>
                         <td className="whitespace-nowrap px-4 py-2">
                           <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${getStatusColor(order.status)}`}>
                             {getStatusText(order.status)}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-2 text-sm text-secondary-900">{order.date}</td>
+                        <td className="whitespace-nowrap px-4 py-2 text-sm dark:text-white">{order.date}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -249,53 +249,53 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-secondary-200 bg-white p-6">
+          <div className="rounded-lg border dark:border-dark-border dark:bg-dark-card p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-medium">روابط سريعة</h2>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Link
                 href="/dashboard/orders"
-                className="flex items-center justify-center rounded-lg border border-secondary-200 p-4 hover:bg-secondary-50"
+                className="flex items-center justify-center rounded-lg border dark:border-dark-border p-4 hover:bg-secondary-50"
               >
                 <div className="text-center">
                   <svg className="mx-auto h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
-                  <span className="mt-2 block text-sm font-medium text-secondary-900">الطلبات</span>
+                  <span className="mt-2 block text-sm font-medium dark:text-white">الطلبات</span>
                 </div>
               </Link>
               <Link
                 href="/dashboard/products"
-                className="flex items-center justify-center rounded-lg border border-secondary-200 p-4 hover:bg-secondary-50"
+                className="flex items-center justify-center rounded-lg border dark:border-dark-border p-4 hover:bg-secondary-50"
               >
                 <div className="text-center">
                   <svg className="mx-auto h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
-                  <span className="mt-2 block text-sm font-medium text-secondary-900">المنتجات</span>
+                  <span className="mt-2 block text-sm font-medium dark:text-white">المنتجات</span>
                 </div>
               </Link>
               <Link
                 href="/dashboard/customers"
-                className="flex items-center justify-center rounded-lg border border-secondary-200 p-4 hover:bg-secondary-50"
+                className="flex items-center justify-center rounded-lg border dark:border-dark-border p-4 hover:bg-secondary-50"
               >
                 <div className="text-center">
                   <svg className="mx-auto h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
-                  <span className="mt-2 block text-sm font-medium text-secondary-900">العملاء</span>
+                  <span className="mt-2 block text-sm font-medium dark:text-white">العملاء</span>
                 </div>
               </Link>
               <Link
                 href="/dashboard/categories"
-                className="flex items-center justify-center rounded-lg border border-secondary-200 p-4 hover:bg-secondary-50"
+                className="flex items-center justify-center rounded-lg border dark:border-dark-border p-4 hover:bg-secondary-50"
               >
                 <div className="text-center">
                   <svg className="mx-auto h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                   </svg>
-                  <span className="mt-2 block text-sm font-medium text-secondary-900">الفئات</span>
+                  <span className="mt-2 block text-sm font-medium dark:text-white">الفئات</span>
                 </div>
               </Link>
             </div>

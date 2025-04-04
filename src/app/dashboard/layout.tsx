@@ -1,33 +1,68 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import {
-  FiHome,
-  FiShoppingBag,
+import { 
+  FiMenu, 
+  FiX, 
+  FiHome, 
+  FiShoppingBag, 
+  FiUsers, 
+  FiImage,
   FiGrid,
-  FiUsers,
-  FiShoppingCart,
   FiSettings,
-  FiMenu,
-  FiX,
-  FiSliders,
+  FiLogOut
 } from 'react-icons/fi'
+import { cn } from '@/lib/utils'
+import { AiFillProduct } from 'react-icons/ai'
 
-const navigation = [
-  { name: 'لوحة التحكم', href: '/dashboard', icon: FiHome },
-  { name: 'المنتجات', href: '/dashboard/products', icon: FiShoppingBag },
-  { name: 'الأقسام', href: '/dashboard/categories', icon: FiGrid },
-  { name: 'الطلبات', href: '/dashboard/orders', icon: FiShoppingCart },
-  { name: 'العملاء', href: '/dashboard/customers', icon: FiUsers },
-  { name: 'الصور الترويجية', href: '/dashboard/carousel', icon: FiSliders },
+interface NavItem {
+  href: string
+  label: string
+  icon: React.ReactNode
+}
 
-  { name: 'الإعدادات', href: '/dashboard/settings', icon: FiSettings },
+const navItems: NavItem[] = [
+  {
+    href: '/dashboard',
+    label: 'لوحة التحكم',
+    icon: <FiHome className="w-5 h-5" />
+  },
+  {
+    href: '/dashboard/products',
+    label: 'المنتجات',
+    icon: <AiFillProduct className="w-5 h-5" />
+  },
+  {
+    href: '/dashboard/orders',
+    label: 'الطلبات',
+    icon: <FiShoppingBag className="w-5 h-5" />
+  },
+  {
+    href: '/dashboard/customers',
+    label: 'العملاء',
+    icon: <FiUsers className="w-5 h-5" />
+  },
+  {
+    href: '/dashboard/carousels',
+    label: 'البانر',
+    icon: <FiImage className="w-5 h-5" />
+  },
+  {
+    href: '/dashboard/categories',
+    label: 'الفئات',
+    icon: <FiGrid className="w-5 h-5" />
+  },
+  {
+    href: '/dashboard/settings',
+    label: 'الإعدادات',
+    icon: <FiSettings className="w-5 h-5" />
+  }
 ]
 
 export default function DashboardLayout({
-  children,
+  children
 }: {
   children: React.ReactNode
 }) {
@@ -35,57 +70,83 @@ export default function DashboardLayout({
   const pathname = usePathname()
 
   return (
-    <div className="!flex !min-h-screen !pt-0 !flex-row bg-secondary-50">
+    <div className="min-h-screen dark:bg-dark-card  ">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 right-0 h-full bg-white border-l border-secondary-200 transition-all duration-300 z-40 ${
-          isSidebarOpen ? 'w-64' : 'w-20'
-        }`}
+        className={cn(
+          "fixed top-0 right-0 z-40 w-64 h-screen transition-transform dark:bg-dark-card bg-white ",
+          !isSidebarOpen && "translate-x-full"
+        )}
       >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h1 className={`font-bold text-xl text-primary-600 ${!isSidebarOpen && 'hidden'}`}>
-            سكاربا
-          </h1>
+        <div className="flex items-center justify-between p-4 ">
+          <h1 className="text-xl font-bold text-primary-600 font-arabic">لوحة التحكم</h1>
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 rounded-lg hover:bg-secondary-100"
+            onClick={() => setIsSidebarOpen(false)}
+            className="p-2 rounded-lg hover:dark:bg-dark-card lg:hidden"
           >
-            {isSidebarOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+            <FiX className="w-5 h-5 dark:text-dark-foreground" />
           </button>
         </div>
-
-        <nav className="p-4">
-          <ul className="space-y-2">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                      isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-secondary-600 hover:bg-secondary-100'
-                    }`}
-                  >
-                    <item.icon size={20} />
-                    {isSidebarOpen && <span className="font-arabic">{item.name}</span>}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        </nav>
+        <div className="py-4 overflow-y-auto">
+          <nav className="space-y-2 px-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 p-3 rounded-lg transition-colors",
+                  pathname === item.href
+                    ? "bg-primary-50 text-primary-600"
+                    : "hover:bg-gray-100 hover:text-secondary-900"
+                )}
+              >
+                {item.icon}
+                <span className="font-arabic">{item.label}</span>
+              </Link>
+            ))}
+            <button 
+              className="flex items-center gap-3 p-3 rounded-lg text-red-600 hover:bg-red-50 w-full"
+              onClick={() => {/* Add logout logic */}}
+            >
+              <FiLogOut className="w-5 h-5" />
+              <span className="font-arabic">تسجيل الخروج</span>
+            </button>
+          </nav>
+        </div>
       </aside>
 
-      {/* Main Content */}
-      <main
-        className={`flex-1 overflow-auto transition-all duration-300 ${
-          isSidebarOpen ? 'mr-64' : 'mr-20'
-        }`}
+      {/* Content */}
+      <div
+        className={cn(
+          "transition-all duration-300",
+          isSidebarOpen ? "lg:mr-64" : ""
+        )}
       >
-        {children}
-      </main>
+        {/* Header */}
+        <header className="sticky top-0 z-30 dark:bg-dark-card border-b">
+          <div className="flex items-center justify-between p-4">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100"
+            >
+              <FiMenu className="w-5 h-5" />
+            </button>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="p-4">
+          {children}
+        </main>
+      </div>
+
+      {/* Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-30 dark:bg-dark-card lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   )
 } 

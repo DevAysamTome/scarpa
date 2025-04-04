@@ -5,6 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -21,6 +22,24 @@ module.exports = {
           400: '#9ca3af',
           500: '#6b7280',
           900: '#111827',
+        },
+        dark: {
+          background: '#121212',
+          foreground: '#f5f5f5',
+          card: '#1e1e1e',
+          border: '#333333',
+          primary: {
+            600: '#3b82f6',
+            700: '#2563eb',
+          },
+          secondary: {
+            100: '#2a2a2a',
+            200: '#333333',
+            300: '#444444',
+            400: '#666666',
+            500: '#888888',
+            900: '#f5f5f5',
+          },
         },
       },
       fontFamily: {

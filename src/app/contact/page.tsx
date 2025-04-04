@@ -61,7 +61,7 @@ export default function ContactPage() {
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Contact Information */}
-        <div className="bg-white p-8 rounded-lg shadow-md">
+        <div className="dark:bg-dark-card p-8 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-6 font-arabic">معلومات الاتصال</h2>
           
           <div className="space-y-6">
@@ -108,12 +108,12 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Form */}
-        <div className="bg-white p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-6 font-arabic">أرسل لنا رسالة</h2>
+        <div className="dark:bg-dark-card p-8 rounded-lg shadow-md">
+          <h2 className="text-2xl dark:text-white font-bold mb-6 font-arabic">أرسل لنا رسالة</h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-secondary-900 mb-2 font-arabic">
+              <label htmlFor="name" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
                 الاسم
               </label>
               <input
@@ -128,7 +128,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-secondary-900 mb-2 font-arabic">
+              <label htmlFor="email" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
                 البريد الإلكتروني
               </label>
               <input
@@ -143,7 +143,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-secondary-900 mb-2 font-arabic">
+              <label htmlFor="phone" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
                 رقم الهاتف
               </label>
               <input
@@ -158,7 +158,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-secondary-900 mb-2 font-arabic">
+              <label htmlFor="message" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
                 الرسالة
               </label>
               <textarea
