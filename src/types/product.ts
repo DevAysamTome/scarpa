@@ -3,6 +3,7 @@ export interface Product {
   name: string
   price: number
   image: string
+  imageUrl: string
   category: string
   description: string
   stock: number
@@ -12,4 +13,5 @@ export interface Product {
   colors: string[]
   createdAt?: string
   status?: 'active' | 'inactive'
+  active: boolean
 } 

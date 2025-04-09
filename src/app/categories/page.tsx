@@ -11,6 +11,9 @@ interface Category {
   name: string
   image: string
   description: string
+  active: boolean
+  createdAt: string
+  imageUrl: string
 }
 
 export default function CategoriesPage() {
@@ -61,7 +64,7 @@ export default function CategoriesPage() {
             <div className="bg-white rounded-lg shadow-sm overflow-hidden transition-transform duration-300 group-hover:scale-105">
               <div className="relative h-48">
                 <img
-                  src={category.image}
+                  src={category.image || category.imageUrl}
                   alt={category.name}
                   className="w-full h-full object-cover"
                 />

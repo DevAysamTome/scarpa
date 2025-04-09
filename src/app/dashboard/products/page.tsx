@@ -12,6 +12,7 @@ interface Category {
   id: string
   name: string
   status: 'active' | 'inactive'
+  active: boolean
 }
 
 interface Product {
@@ -27,6 +28,7 @@ interface Product {
   sizes: number[]
   colors: string[]
   categoryName?: string
+  active : boolean
 }
 
 const AVAILABLE_SIZES = [36, 37, 38, 39, 40, 41, 42, 43]
@@ -46,6 +48,7 @@ export default function ProductsPage() {
     description: '',
     sizes: [],
     colors: [],
+    active: true,
   })
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
 
@@ -62,7 +65,7 @@ export default function ProductsPage() {
           id: doc.id,
           ...doc.data()
         })) as Category[]
-      setCategories(categoriesData.filter(cat => cat.status === 'active'))
+      setCategories(categoriesData.filter(cat => cat.status === 'active' || cat.active))
     } catch (error) {
       console.error('Error fetching categories:', error)
       toast.error('حدث خطأ أثناء جلب الفئات')
@@ -131,6 +134,7 @@ export default function ProductsPage() {
         description: '',
         sizes: [],
         colors: [],
+        active: true,
       })
       setSelectedImage(null)
       fetchProducts()

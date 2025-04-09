@@ -50,7 +50,7 @@ export function ProductCard({ product }: ProductCardProps) {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.image,
+        image: product.image ?? product.imageUrl,
         quantity: 1,
         size: 42, // Default size
         color: 'أسود' // Default color
@@ -73,11 +73,11 @@ export function ProductCard({ product }: ProductCardProps) {
         <FiHeart 
           className={`w-5 h-5 ${isFavorite(product.id) ? 'text-red-500 fill-current' : 'text-gray-600'}`}
         />
-      </button>
+      </button> 
       <Link href={`/products/${product.id}`}>
         <div className="relative h-64 overflow-hidden">
           <Image
-            src={product.image}
+            src={product.image ?? product.imageUrl}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-110"

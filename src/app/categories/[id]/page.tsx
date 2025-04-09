@@ -20,6 +20,8 @@ interface Product {
   stock: number
   image: string
   category: string
+  imageUrl: string
+  active: boolean
 }
 
 interface Category {
@@ -27,6 +29,8 @@ interface Category {
   name: string
   description: string
   image: string
+  imageUrl: string
+  active: boolean
 }
 
 export default function CategoryPage({ params }: { params: Promise<{ id: string }> }) {
@@ -91,7 +95,7 @@ export default function CategoryPage({ params }: { params: Promise<{ id: string 
       <div className="mb-8">
         <div className="relative h-64 rounded-lg overflow-hidden mb-4">
           <img
-            src={category.image}
+            src={category.image || category.imageUrl}
             alt={category.name}
             className="w-full h-full object-cover"
           />
