@@ -21,6 +21,8 @@ interface Category {
   id: string
   name: string
   image: string
+  imageUrl: string
+  active: boolean
 }
 
 export default function HomePage() {
@@ -162,7 +164,7 @@ export default function HomePage() {
                 >
                   <div className="relative h-32 mb-4 rounded-lg overflow-hidden">
                     <Image
-                      src={category.image}
+                      src={category.image || category.imageUrl}
                       alt={category.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
