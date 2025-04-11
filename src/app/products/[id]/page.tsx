@@ -10,6 +10,11 @@ import { db } from '@/lib/firebase'
 import toast from 'react-hot-toast'
 import { useCart } from '@/contexts/cart-context'
 
+interface ColorQuantity {
+  color: string
+  quantity: number
+}
+
 interface Product {
   id: string
   name: string
@@ -18,7 +23,7 @@ interface Product {
   images: string[]
   category: string
   sizes: number[]
-  colors: string[]
+  colors: ColorQuantity[]
   stock: number
   specifications?: {
     material: string
@@ -29,6 +34,7 @@ interface Product {
     rating: number
     count: number
   }
+  customColors?: ColorQuantity[]
 }
 
 const DEFAULT_IMAGE = '/images/placeholder.jpg'
@@ -210,16 +216,36 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           {/* Color Selection */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4 font-arabic">اختر اللون</h3>
-            <div className="flex gap-2">
-              {product.colors.map((color) => (
-                <button
-                  key={color}
-                  onClick={() => setSelectedColor(color)}
-                  className={`w-8 h-8 rounded-full border-2 ${
-                    selectedColor === color ? 'border-primary-600' : 'border-transparent'
-                  }`}
-                  style={{ backgroundColor: color }}
-                />
+            <div className="flex flex-wrap gap-4">
+              {product.colors.map(({ color, quantity }) => (
+                <div key={color} className="flex flex-col items-center gap-2">
+                  <button
+                    onClick={() => setSelectedColor(color)}
+                    className={`w-8 h-8 rounded-full border-2 ${
+                      selectedColor === color ? 'border-primary-600' : 'border-transparent'
+                    }`}
+                    style={{ backgroundColor: color }}
+                    disabled={quantity === 0}
+                  />
+                  <span className="text-sm text-secondary-600 font-arabic">
+                    {quantity} متوفر
+                  </span>
+                </div>
+              ))}
+              {product.customColors?.map(({ color, quantity }) => (
+                <div key={color} className="flex flex-col items-center gap-2">
+                  <button
+                    onClick={() => setSelectedColor(color)}
+                    className={`w-8 h-8 rounded-full border-2 ${
+                      selectedColor === color ? 'border-primary-600' : 'border-transparent'
+                    }`}
+                    style={{ backgroundColor: color }}
+                    disabled={quantity === 0}
+                  />
+                  <span className="text-sm text-secondary-600 font-arabic">
+                    {quantity} متوفر
+                  </span>
+                </div>
               ))}
             </div>
           </div>
