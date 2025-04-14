@@ -70,11 +70,11 @@ export function Footer({ className = '' }: FooterProps) {
             <ul className="space-y-2 dark:text-secondary-300">
               <li className="flex items-center gap-2 font-arabic">
                 <FiMapPin className="text-primary-400" />
-                <span>العنوان: شارع الرئيسي، المدينة</span>
+                <span>العنوان:  جنين -دوار الجلبوني -عمارة النجاح- المدخل بجانب صوفيا للعرائس</span>
               </li>
               <li className="flex items-center gap-2 font-arabic">
                 <FiPhone className="text-primary-400" />
-                <span>الهاتف: +123 456 789</span>
+                <span>الهاتف: 0594154134</span>
               </li>
               <li className="flex items-center gap-2 font-arabic">
                 <FiMail className="text-primary-400" />

@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { FirebaseProvider } from '@/contexts/firebase-context'
 import { CartProvider } from '@/contexts/cart-context'
 import { FavoritesProvider } from '@/contexts/favorites-context'
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default function RootLayout({
                       {children}
                     </main>
                     <Footer />
+                    <WhatsAppButton />
                   </div>
                   <Toaster position="top-center" />
                 </FavoritesProvider>

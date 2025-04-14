@@ -1,60 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { addDoc, collection } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import toast from 'react-hot-toast'
-import { FiMapPin, FiPhone, FiMail, FiClock } from 'react-icons/fi'
-
-interface ContactForm {
-  name: string
-  email: string
-  phone: string
-  message: string
-}
+import React from 'react';
+import { FiMapPin, FiPhone, FiMail, FiClock } from 'react-icons/fi';
+import ContactForm from '@/components/ContactForm';
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState<ContactForm>({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-  })
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-
-    try {
-      await addDoc(collection(db, 'messages'), {
-        ...formData,
-        createdAt: new Date().toISOString(),
-      })
-      
-      toast.success('تم إرسال رسالتك بنجاح')
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        message: '',
-      })
-    } catch (error) {
-      console.error('Error sending message:', error)
-      toast.error('حدث خطأ أثناء إرسال الرسالة')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center font-arabic">اتصل بنا</h1>
@@ -108,80 +58,8 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Form */}
-        <div className="dark:bg-dark-card p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl dark:text-white font-bold mb-6 font-arabic">أرسل لنا رسالة</h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
-                الاسم
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="input"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
-                البريد الإلكتروني
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="input"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
-                رقم الهاتف
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="input"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium dark:text-white mb-2 font-arabic">
-                الرسالة
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={4}
-                className="input"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-primary w-full h-10"
-              disabled={loading}
-            >
-              {loading ? 'جاري الإرسال...' : 'إرسال'}
-            </button>
-          </form>
-        </div>
+        <ContactForm />
       </div>
     </div>
-  )
+  );
 } 
