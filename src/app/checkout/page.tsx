@@ -113,7 +113,7 @@ export default function CheckoutPage() {
                         المقاس: {item.size} | اللون: {item.color}
                       </p>
                       <p className="text-primary-600 font-bold font-arabic mt-2">
-                        {item.price} ريال × {item.quantity}
+                        {item.price} شيكل × {item.quantity}
                       </p>
                     </div>
                   </div>
@@ -123,7 +123,7 @@ export default function CheckoutPage() {
             <div className="p-6 bg-secondary-50 border-t">
               <div className="flex justify-between items-center">
                 <span className="font-bold font-arabic">المجموع الكلي:</span>
-                <span className="text-xl font-bold text-primary-600 font-arabic">{total} ريال</span>
+                <span className="text-xl font-bold text-primary-600 font-arabic">{total} شيكل</span>
               </div>
             </div>
           </div>

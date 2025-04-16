@@ -137,7 +137,7 @@ function OrderDetails() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">{item.price} ريال</p>
+                  <p className="font-medium">{item.price} شيكل</p>
                   <p className="text-sm text-secondary-600">الكمية: {item.quantity}</p>
                 </div>
               </div>
@@ -173,7 +173,7 @@ function OrderDetails() {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="flex justify-between items-center">
             <span className="text-xl font-bold">المجموع الكلي</span>
-            <span className="text-2xl font-bold text-primary-600">{order.total} ريال</span>
+            <span className="text-2xl font-bold text-primary-600">{order.total} شيكل</span>
           </div>
         </div>
 
