@@ -8,6 +8,7 @@ import { db } from '@/lib/firebase'
 import { FiArrowLeft, FiShoppingBag, FiStar } from 'react-icons/fi'
 import Carousel from '@/components/Carousel'
 import { CarouselSlide } from '@/types/carousel'
+import { initializeCarousel } from '@/lib/init-carousel'
 
 interface Product {
   id: string
@@ -34,19 +35,46 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       try {
+        // Initialize carousel items if needed
+        await initializeCarousel()
+
         // Fetch carousel slides
         const slidesQuery = query(
           collection(db, 'carousel'),
-          where('isActive', '==', true),
-          orderBy('order', 'asc')
+          where('isActive', '==', true)
         )
         const slidesSnapshot = await getDocs(slidesQuery)
-        const slidesData = slidesSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate(),
-          updatedAt: doc.data().updatedAt?.toDate(),
-        })) as CarouselSlide[]
+        const slidesData = slidesSnapshot.docs.map(doc => {
+          const data = doc.data()
+          
+          // Handle different date formats
+          let createdAt = data.createdAt
+          let updatedAt = data.updatedAt
+          
+          // If createdAt is a Firestore Timestamp, convert it to Date
+          if (createdAt && typeof createdAt.toDate === 'function') {
+            createdAt = createdAt.toDate()
+          } else if (typeof createdAt === 'string') {
+            // If it's a string, parse it to Date
+            createdAt = new Date(createdAt)
+          }
+          
+          // Same for updatedAt
+          if (updatedAt && typeof updatedAt.toDate === 'function') {
+            updatedAt = updatedAt.toDate()
+          } else if (typeof updatedAt === 'string') {
+            updatedAt = new Date(updatedAt)
+          }
+          
+          return {
+            id: doc.id,
+            ...data,
+            createdAt,
+            updatedAt
+          }
+        }) as CarouselSlide[]
+        
+        console.log('Fetched carousel slides:', slidesData)
         setCarouselSlides(slidesData)
 
         // Fetch featured products
@@ -83,7 +111,13 @@ export default function HomePage() {
     <main className="min-h-screen dark:bg-dark-card">
       {/* Hero Section */}
       <section className="relative h-[80vh]">
-        <Carousel slides={carouselSlides} />
+        {carouselSlides.length > 0 ? (
+          <Carousel slides={carouselSlides} />
+        ) : (
+          <div className="w-full h-full bg-secondary-100 flex items-center justify-center">
+            <p className="text-secondary-600">لا توجد صور متاحة</p>
+          </div>
+        )}
       </section>
 
       {/* Featured Products Section */}

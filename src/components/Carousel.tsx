@@ -10,7 +10,7 @@ interface CarouselProps {
     id: string
     title: string
     description: string
-    image: string
+    imageUrl: string
     isActive: boolean
   }[]
 }
@@ -20,8 +20,17 @@ export default function Carousel({ slides }: CarouselProps) {
   const [isLoading, setIsLoading] = useState(true)
   const carouselRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    console.log('Carousel slides:', slides)
+    if (slides.length > 0) {
+      setIsLoading(false)
+    }
+  }, [slides])
+
   // Auto-advance slides
   useEffect(() => {
+    if (slides.length <= 1) return
+
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length)
     }, 5000)
@@ -40,6 +49,14 @@ export default function Carousel({ slides }: CarouselProps) {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length)
   }
 
+  if (!slides || slides.length === 0) {
+    return (
+      <div className="w-full h-full bg-secondary-100 flex items-center justify-center">
+        <p className="text-secondary-600">لا توجد صور متاحة</p>
+      </div>
+    )
+  }
+
   return (
     <div className="relative w-full h-full overflow-hidden" ref={carouselRef}>
       {/* Slides */}
@@ -52,21 +69,27 @@ export default function Carousel({ slides }: CarouselProps) {
             }`}
           >
             <div className="relative w-full h-full">
-              <Image
-                src={slide.image}
-                alt={slide.title}
-                fill
-                className="object-cover"
-                priority={index === 0}
-                quality={100}
-                sizes="100vw"
-                onLoadingComplete={() => {
-                  if (index === 0) setIsLoading(false)
-                }}
-              />
+              {slide.imageUrl ? (
+                <Image
+                  src={slide.imageUrl}
+                  alt={slide.title}
+                  fill
+                  className="object-cover"
+                  priority={index === 0}
+                  quality={100}
+                  sizes="100vw"
+                  onLoadingComplete={() => {
+                    if (index === 0) setIsLoading(false)
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-secondary-100 flex items-center justify-center">
+                  <p className="text-secondary-600">لا توجد صورة متاحة</p>
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent">
                 <div className="container mx-auto px-4 h-full flex items-center">
-                  <div className="max-w-2xl text-black">
+                  <div className="max-w-2xl text-white">
                     <h1 className="text-5xl font-bold mb-6 font-arabic">
                       {slide.title}
                     </h1>
@@ -96,34 +119,38 @@ export default function Carousel({ slides }: CarouselProps) {
       )}
 
       {/* Navigation Buttons */}
-      <button
-        onClick={goToPrevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors z-20"
-        aria-label="Previous slide"
-      >
-        <FiChevronLeft className="w-6 h-6" />
-      </button>
-      <button
-        onClick={goToNextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors z-20"
-        aria-label="Next slide"
-      >
-        <FiChevronRight className="w-6 h-6" />
-      </button>
-
-      {/* Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-        {slides.map((_, index) => (
+      {slides.length > 1 && (
+        <>
           <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentIndex ? 'bg-white' : 'bg-white/50'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
+            onClick={goToPrevSlide}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors z-20"
+            aria-label="Previous slide"
+          >
+            <FiChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={goToNextSlide}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors z-20"
+            aria-label="Next slide"
+          >
+            <FiChevronRight className="w-6 h-6" />
+          </button>
+
+          {/* Dots */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  index === currentIndex ? 'bg-white' : 'bg-white/50'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   )
 } 

@@ -1,41 +1,48 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
-
-interface FAQItem {
-  question: string
-  answer: string
-}
-
-const faqItems: FAQItem[] = [
-  {
-    question: 'كيف يمكنني إرجاع منتج؟',
-    answer: 'يمكنك إرجاع المنتج خلال 14 يوماً من تاريخ الاستلام. يجب أن يكون المنتج بحالته الأصلية مع جميع الملحقات والتغليف. يرجى التواصل مع خدمة العملاء لبدء عملية الإرجاع.'
-  },
-  {
-    question: 'ما هي سياسة الشحن؟',
-    answer: 'نقدم خدمة شحن مجانية للطلبات التي تتجاوز قيمتها 200 ريال. يتم الشحن خلال 2-5 أيام عمل. يمكنك تتبع طلبك من خلال رقم التتبع الذي يتم إرساله عبر البريد الإلكتروني.'
-  },
-  {
-    question: 'هل يمكنني تغيير حجم المنتج بعد الشراء؟',
-    answer: 'نعم، يمكنك تغيير حجم المنتج خلال فترة الإرجاع (14 يوماً). يرجى التواصل مع خدمة العملاء لتنسيق عملية الاستبدال.'
-  },
-  {
-    question: 'ما هي طرق الدفع المتاحة؟',
-    answer: 'نقبل جميع البطاقات الائتمانية الرئيسية، والمدى، والدفع عند الاستلام. جميع المعاملات تتم بشكل آمن ومشفر.'
-  },
-  {
-    question: 'كيف يمكنني تتبع طلبي؟',
-    answer: 'بعد إتمام عملية الشراء، سيتم إرسال رقم تتبع الطلب إلى بريدك الإلكتروني. يمكنك استخدام هذا الرقم لتتبع حالة طلبك على موقعنا.'
-  }
-]
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { PolicyPage, FAQItem } from '@/types/policy'
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [faqItems, setFaqItems] = useState<FAQItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetchFAQContent()
+  }, [])
+
+  const fetchFAQContent = async () => {
+    try {
+      const docRef = doc(db, 'policyPages', 'faq')
+      const docSnap = await getDoc(docRef)
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data() as PolicyPage
+        if (data.faqItems && data.faqItems.length > 0) {
+          setFaqItems(data.faqItems)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching FAQ content:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      </div>
+    )
   }
 
   return (
