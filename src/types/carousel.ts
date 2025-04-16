@@ -1,6 +1,6 @@
 export interface CarouselSlide {
   id: string
-  image: string
+  imageUrl: string
   title: string
   description: string
   order: number
@@ -10,7 +10,7 @@ export interface CarouselSlide {
 }
 
 export interface CreateCarouselSlideInput {
-  image: string
+  imageUrl: string
   title: string
   description: string
   order?: number
