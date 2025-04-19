@@ -13,7 +13,8 @@ import {
   FiGrid,
   FiSettings,
   FiLogOut,
-  FiFileText
+  FiFileText,
+  FiInfo
 } from 'react-icons/fi'
 import { cn } from '@/lib/utils'
 import { AiFillProduct } from 'react-icons/ai'
@@ -54,6 +55,11 @@ const navItems: NavItem[] = [
     href: '/dashboard/categories',
     label: 'الفئات',
     icon: <FiGrid className="w-5 h-5" />
+  },
+  {
+    href: '/dashboard/about',
+    label: 'من نحن',
+    icon: <FiInfo className="w-5 h-5" />
   },
   {
     href: '/dashboard/content',

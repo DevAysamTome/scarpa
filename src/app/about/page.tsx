@@ -1,78 +1,107 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { AboutContent } from '@/types/about'
+import { FiCheck } from 'react-icons/fi'
 
 export default function AboutPage() {
+  const [aboutContent, setAboutContent] = useState<AboutContent | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchAboutContent() {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'about'))
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0]
+          setAboutContent({
+            id: doc.id,
+            ...doc.data()
+          } as AboutContent)
+        }
+      } catch (error) {
+        console.error('Error fetching about content:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAboutContent()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      </div>
+    )
+  }
+
+  if (!aboutContent) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <h1 className="text-2xl font-bold mb-4">لا يوجد محتوى متاح</h1>
+        <p className="text-secondary-600">يرجى المحاولة مرة أخرى لاحقاً</p>
+      </div>
+    )
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center font-arabic text-secondary-900 dark:text-white">عن الشركة</h1>
-        
-        <div className="mb-12 relative h-[400px] rounded-lg overflow-hidden">
-          <Image
-            src="/images/about.jpeg"
-            alt="سكاربا للأحذية"
-            fill
-            className="object-contain"
-          />
+    <main className="min-h-screen py-16">
+      <div className="container mx-auto px-4">
+        {/* Hero Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+          <div className="relative h-[400px] rounded-lg overflow-hidden">
+            <Image
+              src={aboutContent.image}
+              alt={aboutContent.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          <div>
+            <h1 className="text-4xl font-bold mb-6 font-arabic">{aboutContent.title}</h1>
+            <p className="text-lg text-secondary-600 mb-8 font-arabic leading-relaxed">
+              {aboutContent.description}
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-8">
-          <section className="bg-white dark:bg-dark-card p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 font-arabic text-secondary-900 dark:text-white">من نحن</h2>
-            <p className="text-secondary-600 dark:text-secondary-300 leading-relaxed font-arabic">
-              سكاربا هي علامة تجارية رائدة في مجال الأحذية، نقدم مجموعة متنوعة من الأحذية الرياضية والكلاسيكية عالية الجودة. 
-              نحن نؤمن بأن الحذاء المناسب يمكن أن يغير يومك بأكمله، ولهذا نحرص على تقديم أفضل المنتجات بأسعار منافسة.
+        {/* Mission & Vision */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+          <div className="bg-white p-8 rounded-lg shadow-sm">
+            <h2 className="text-2xl font-bold mb-4 font-arabic">مهمتنا</h2>
+            <p className="text-secondary-600 font-arabic leading-relaxed">
+              {aboutContent.mission}
             </p>
-          </section>
-
-          <section className="bg-white dark:bg-dark-card p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 font-arabic text-secondary-900 dark:text-white">رؤيتنا</h2>
-            <p className="text-secondary-600 dark:text-secondary-300 leading-relaxed font-arabic">
-              نسعى لأن نكون الوجهة الأولى للأحذية في المملكة العربية السعودية، من خلال تقديم منتجات عالية الجودة 
-              وخدمة عملاء متميزة وتجربة تسوق سلسة.
+          </div>
+          <div className="bg-white p-8 rounded-lg shadow-sm">
+            <h2 className="text-2xl font-bold mb-4 font-arabic">رؤيتنا</h2>
+            <p className="text-secondary-600 font-arabic leading-relaxed">
+              {aboutContent.vision}
             </p>
-          </section>
+          </div>
+        </div>
 
-          <section className="bg-white dark:bg-dark-card p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 font-arabic text-secondary-900 dark:text-white">قيمنا</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <h3 className="text-xl font-semibold mb-2 font-arabic text-secondary-900 dark:text-white">الجودة</h3>
-                <p className="text-secondary-600 dark:text-secondary-300 font-arabic">نقدم أفضل المنتجات من حيث الجودة والمتانة</p>
+        {/* Values */}
+        <div className="bg-white p-8 rounded-lg shadow-sm">
+          <h2 className="text-2xl font-bold mb-6 font-arabic">قيمنا</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {aboutContent.values.map((value, index) => (
+              <div key={index} className="flex items-start gap-3">
+                <div className="mt-1">
+                  <FiCheck className="w-5 h-5 text-primary-600" />
+                </div>
+                <p className="text-secondary-600 font-arabic">{value}</p>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2 font-arabic text-secondary-900 dark:text-white">الابتكار</h3>
-                <p className="text-secondary-600 dark:text-secondary-300 font-arabic">نواكب أحدث صيحات الموضة والتصاميم العصرية</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2 font-arabic text-secondary-900 dark:text-white">رضا العملاء</h3>
-                <p className="text-secondary-600 dark:text-secondary-300 font-arabic">نضع رضا عملائنا في مقدمة أولوياتنا</p>
-              </div>
-            </div>
-          </section>
-
-          <section className="bg-white dark:bg-dark-card p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 font-arabic text-secondary-900 dark:text-white">لماذا تختار سكاربا؟</h2>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <span className="text-primary-600 dark:text-primary-400 ml-2">✓</span>
-                <p className="text-secondary-600 dark:text-secondary-300 font-arabic">منتجات عالية الجودة من أفضل العلامات التجارية</p>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 dark:text-primary-400 ml-2">✓</span>
-                <p className="text-secondary-600 dark:text-secondary-300 font-arabic">أسعار منافسة وعروض مستمرة</p>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 dark:text-primary-400 ml-2">✓</span>
-                <p className="text-secondary-600 dark:text-secondary-300 font-arabic">خدمة عملاء متميزة على مدار الساعة</p>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 dark:text-primary-400 ml-2">✓</span>
-                <p className="text-secondary-600 dark:text-secondary-300 font-arabic">شحن سريع لجميع مناطق المملكة</p>
-              </li>
-            </ul>
-          </section>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 } 
